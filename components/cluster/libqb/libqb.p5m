@@ -1,0 +1,61 @@
+#
+# This file and its contents are supplied under the terms of the
+# Common Development and Distribution License ("CDDL)". You may
+# only use this file in accordance with the terms of the CDDL.
+#
+# A full copy of the text of the CDDL should have accompanied this
+# source. A copy of the CDDL is also available via the Internet at
+# http://www.illumos.org/license/CDDL.
+#
+
+#
+# Copyright 2013 Adam Stevko. All rights reserved.
+#
+
+<transform file path=usr.*/man/.+ -> default mangler.man.stability uncommitted>
+
+set name=pkg.fmri value=pkg:/library/libqb@$(IPS_COMPONENT_VERSION),$(BUILD_VERSION)
+set name=pkg.summary value="libqb is a library providing high performance logging, tracing, ipc, and poll."
+set name=info.classification value="org.opensolaris.category.2008:System/Libraries"
+set name=info.upstream-url value=$(COMPONENT_PROJECT_URL)
+set name=info.source-url value=$(COMPONENT_ARCHIVE_URL)
+set name=org.opensolaris.consolidation value=$(CONSOLIDATION)
+
+license libqb.license license='LGPLv2'
+
+dir  path=usr
+dir  path=usr/include
+dir  path=usr/include/qb
+file path=usr/include/qb/qbarray.h
+file path=usr/include/qb/qbatomic.h
+file path=usr/include/qb/qbconfig.h
+file path=usr/include/qb/qbdefs.h
+file path=usr/include/qb/qbhdb.h
+file path=usr/include/qb/qbipc_common.h
+file path=usr/include/qb/qbipcc.h
+file path=usr/include/qb/qbipcs.h
+file path=usr/include/qb/qblist.h
+file path=usr/include/qb/qblog.h
+file path=usr/include/qb/qbloop.h
+file path=usr/include/qb/qbmap.h
+file path=usr/include/qb/qbrb.h
+file path=usr/include/qb/qbutil.h
+dir  path=usr/lib
+file path=usr/lib/libqb.a
+link path=usr/lib/libqb.so target=libqb.so.$(COMPONENT_VERSION)
+file path=usr/lib/libqb.so.$(COMPONENT_VERSION)
+link path=usr/lib/libqb.so.0 target=libqb.so.$(COMPONENT_VERSION)
+dir  path=usr/lib/pkgconfig
+file path=usr/lib/pkgconfig/libqb.pc
+dir  path=usr/sbin
+file path=usr/sbin/qb-blackbox
+dir  path=usr/share
+dir  path=usr/share/doc
+dir  path=usr/share/doc/libqb
+file path=usr/share/doc/libqb/COPYING
+file path=usr/share/doc/libqb/INSTALL
+file path=usr/share/doc/libqb/README.markdown
+dir  path=usr/share/man
+dir  path=usr/share/man/man3
+dir  path=usr/share/man/man8
+file path=usr/share/man/man8/qb-blackbox.8
