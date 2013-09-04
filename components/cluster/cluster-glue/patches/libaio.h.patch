@@ -1,0 +1,15 @@
+diff -Nura Reusable-Cluster-Components-glue--02bdcf58f9a0.orig/lib/stonith/sbd.h Reusable-Cluster-Components-glue--02bdcf58f9a0/lib/stonith/sbd.h
+--- Reusable-Cluster-Components-glue--02bdcf58f9a0.orig/lib/stonith/sbd.h	2012-10-15 15:58:55.000000000 +0200
++++ Reusable-Cluster-Components-glue--02bdcf58f9a0/lib/stonith/sbd.h	2013-08-08 23:54:58.770626277 +0200
+@@ -26,7 +26,11 @@
+ #include <ctype.h>
+ #include <errno.h>
+ #include <fcntl.h>
++#if defined (__SVR4) && defined (__sun)
++#include <sys/aio.h>
++#else
+ #include <libaio.h>
++#endif
+ #include <linux/fs.h>
+ #include <linux/types.h>
+ #include <linux/watchdog.h>
