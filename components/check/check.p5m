@@ -1,0 +1,77 @@
+#
+# This file and its contents are supplied under the terms of the
+# Common Development and Distribution License ("CDDL)". You may
+# only use this file in accordance with the terms of the CDDL.
+#
+# A full copy of the text of the CDDL should have accompanied this
+# source. A copy of the CDDL is also available via the Internet at
+# http://www.illumos.org/license/CDDL.
+#
+
+#
+# Copyright 2013 Adam Stevko. All rights reserved.
+#
+
+<transform file path=usr.*/man/.+ -> default mangler.man.stability uncommitted>
+
+set name=pkg.fmri value=pkg:/developer/check@$(IPS_COMPONENT_VERSION),$(BUILD_VERSION)
+set name=pkg.summary value="Check is a unit testing framework for C."
+set name=info.classification value="org.opensolaris.category.2008:Development/C"
+set name=info.upstream-url value=$(COMPONENT_PROJECT_URL)
+set name=info.source-url value=$(COMPONENT_ARCHIVE_URL)
+set name=org.opensolaris.consolidation value=$(CONSOLIDATION)
+
+license check.license license='LGPLv2'
+
+dir  path=usr
+dir  path=usr/bin
+file path=usr/bin/checkmk
+dir  path=usr/include
+file path=usr/include/check.h
+file path=usr/include/check_stdint.h
+dir  path=usr/lib
+link path=usr/lib/libcheck.so target=libcheck.so.0.0.0
+link path=usr/lib/libcheck.so.0 target=libcheck.so.0.0.0
+file path=usr/lib/libcheck.so.0.0.0
+dir  path=usr/lib/pkgconfig
+file path=usr/lib/pkgconfig/check.pc
+dir  path=usr/share
+dir  path=usr/share/aclocal
+file path=usr/share/aclocal/check.m4
+dir  path=usr/share/doc
+dir  path=usr/share/doc/check
+file path=usr/share/doc/check/COPYING.LESSER
+file path=usr/share/doc/check/ChangeLog
+file path=usr/share/doc/check/ChangeLogOld
+file path=usr/share/doc/check/NEWS
+file path=usr/share/doc/check/README
+file path=usr/share/doc/check/SVNChangeLog
+dir  path=usr/share/doc/check/example
+file path=usr/share/doc/check/example/Makefile.am
+file path=usr/share/doc/check/example/README
+file path=usr/share/doc/check/example/configure.ac
+dir  path=usr/share/doc/check/example/src
+file path=usr/share/doc/check/example/src/Makefile.am
+file path=usr/share/doc/check/example/src/main.c
+file path=usr/share/doc/check/example/src/money.1.c
+file path=usr/share/doc/check/example/src/money.1.h
+file path=usr/share/doc/check/example/src/money.2.h
+file path=usr/share/doc/check/example/src/money.3.c
+file path=usr/share/doc/check/example/src/money.4.c
+file path=usr/share/doc/check/example/src/money.5.c
+file path=usr/share/doc/check/example/src/money.6.c
+file path=usr/share/doc/check/example/src/money.c
+file path=usr/share/doc/check/example/src/money.h
+dir  path=usr/share/doc/check/example/tests
+file path=usr/share/doc/check/example/tests/Makefile.am
+file path=usr/share/doc/check/example/tests/check_money.1.c
+file path=usr/share/doc/check/example/tests/check_money.2.c
+file path=usr/share/doc/check/example/tests/check_money.3.c
+file path=usr/share/doc/check/example/tests/check_money.6.c
+file path=usr/share/doc/check/example/tests/check_money.7.c
+file path=usr/share/doc/check/example/tests/check_money.c
+dir  path=usr/share/info
+file path=usr/share/info/check.info
+dir  path=usr/share/man
+dir  path=usr/share/man/man1
+file path=usr/share/man/man1/checkmk.1
