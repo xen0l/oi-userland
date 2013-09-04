@@ -130,3 +130,5 @@
 /^pkgconfig$/d
 /^libdaemon$/d
 /^json-c$/d
+/^check$/d
+/^cluster\/.*$/d
