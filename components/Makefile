@@ -129,6 +129,10 @@ $(COMPONENT_DIRS):	$(WS_LOGS) setup FORCE
 	 $(BASS_O_MATIC) $(TEMPLATE_ZONE:%=--template-zone %) \
 			 $(@:%=--component %) --make $(TARGET) $(LOG)
 
+$(CHANGED_COMPONENT_DIRS):	$(WS_LOGS) setup FORCE
+	@cd $@ && echo "$(TARGET $@) && \
+	 $(WS_TOP)/tools/userland-changed --workspace=$(WS_TOP) 
+
 incorporation:
 	$(eval COMPONENT_REVISION := $(shell git rev-list HEAD --count))
 	$(WS_TOOLS)/userland-incorporator --repository $(PKG_REPO) \

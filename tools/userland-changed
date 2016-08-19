@@ -1,0 +1,126 @@
+#!/usr/bin/python2.7
+#
+# This file and its contents are supplied under the terms of the
+# Common Development and Distribution License ("CDDL"). You may
+# only use this file in accordance with the terms of the CDDL.
+#
+# A full copy of the text of the CDDL should have accompanied this
+# source. A copy of the CDDL is also available via the Internet at
+# http://www.illumos.org/license/CDDL.
+#
+
+#
+# Copyright 2016 Adam Stevko. All rights reserved
+#
+
+#
+# userland-changed - display a list of changed components between
+# two commits
+#
+
+import subprocess
+import select
+import os
+import argparse
+import sys
+import glob
+
+
+def run_command(command):
+
+    rc = 0
+    out = ''
+    err = ''
+
+    stdout = subprocess.PIPE
+    stderr = subprocess.PIPE
+
+    try:
+
+        cmd = subprocess.Popen(args=command,
+                               stdout=stdout,
+                               stderr=stderr)
+
+        rpipes = [cmd.stdout, cmd.stderr]
+
+        out_data = []
+        err_data = []
+
+        while True:
+            rfd, _, _ = select.select(rpipes, [], rpipes, 1)
+
+            if cmd.stdout in rfd:
+                data = os.read(cmd.stdout.fileno(), 9000)
+                out_data.append(data)
+                if data == '':
+                    rpipes.remove(cmd.stdout)
+
+            if cmd.stderr in rfd:
+                data = os.read(cmd.stderr.fileno(), 9000)
+                err_data.append(data)
+                if data == '':
+                    rpipes.remove(cmd.stderr)
+
+            if (not rpipes or not rfd) and cmd.poll() is not None:
+                break
+            elif not rpipes and cmd.poll() is None:
+                cmd.wait()
+                break
+
+        rc = cmd.returncode
+        out = ''.join(out_data)
+        err = ''.join(err_data)
+
+    except (OSError, IOError) as e:
+        rc = 255
+        out = ''
+        err = e
+
+    return (rc, out, err)
+
+
+def is_component_path(path):
+    if glob.glob(path + os.path.sep + '*.p5m'):
+        return True
+    return False
+
+
+def find_component_paths(out, workspace_path=None):
+
+    for line in out.splitlines():
+        # git output might contain empty lines, so we skip them.
+        if not line:
+            continue
+
+        # Every time component is added, modified or moved, Makefile has to be
+        # present. However, this does not yet guarantee that the line is a
+        # real component.
+        if os.path.basename(line) == 'Makefile':
+            if is_component_path(workspace_path + os.path.sep + os.path.dirname(line)):
+                yield os.path.dirname(line)
+
+
+def main():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--start-revision', default='HEAD~2', dest='start_revision')
+    parser.add_argument('--end-revision', default='HEAD', dest='end_revision')
+    parser.add_argument('--workspace', dest='workspace', required=True)
+    args = parser.parse_args()
+
+    cmd = ['git', 'log', '--diff-filter=AMR', '--name-only',
+           '--pretty=format:', args.start_revision + '..' + args.end_revision]
+
+    rc, out, err = run_command(cmd)
+
+    if rc != 0:
+        print err
+        sys.exit(rc)
+    else:
+        pass
+
+    for component_path in sorted(set(find_component_paths(out, workspace_path=args.workspace))):
+        print component_path
+
+if __name__ == '__main__':
+    main()
