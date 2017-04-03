@@ -99,4 +99,4 @@ if has_component_changes
 end
 
 github.review.submit
-mention.run
+mention.run(2, [], [])
