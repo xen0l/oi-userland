@@ -1,10 +1,7 @@
 language: ruby
 
-before_script:
-  - gem install danger --version '~> 4.0' && danger
-
 script:
-  - exit $?
+  - gem install danger --version '~> 4.0' && danger
 
 notifications:
   email: false
