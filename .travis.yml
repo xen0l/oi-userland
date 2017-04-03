@@ -1,8 +1,4 @@
 language: ruby
 
 before_script:
-  - gem install danger --version '~> 4.0'
-  - gem install danger-mention
-
-script:
-  - danger 
+  - gem install danger --version '~> 4.0' && danger
