@@ -8,3 +8,10 @@ script:
 
 notifications:
   email: false
+  irc:
+    channels:
+      - "irc.freenode.org#oi-infra"
+    on_success: never
+    on_failure: change
+    template:
+      - "%{repository} %{branch} %{commit} %{build_url} %{author}: %{message}"
