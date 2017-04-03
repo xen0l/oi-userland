@@ -38,21 +38,20 @@ end
 
 # Helper functions
 def check_base_file(file_name)
-    warn('Please add your copyright to ' + file_name) if check_copyright(file_name)
+    github.review.warn('Please add your copyright to ' + file_name) if check_copyright(file_name)
 end
 
 def check_component_makefile(file_name)
 
     check_base_file(file_name)
 
-    warn('Remove depend.mk line from ' + file_name) if check_depend_mk(file_name)
-    warn('Remove BUILD_PKG_DEPENDENCIES line from ' + file_name) if check_BUILD_PKG_DEPENDENCIES(file_name)
-    warn('Switch Makefile include to use $(WS_MAKE_RULES) variable in ' + file_name) if check_ws_make_rules(file_name)
-    warn('Consider adding REQUIRED_PACKAGES to ' + file_name) if check_required_packages(file_name)
+    github.review.warn('Remove depend.mk line from ' + file_name) if check_depend_mk(file_name)
+    github.review.warn('Remove BUILD_PKG_DEPENDENCIES line from ' + file_name) if check_BUILD_PKG_DEPENDENCIES(file_name)
+    github.review.warn('Switch Makefile include to use $(WS_MAKE_RULES) variable in ' + file_name) if check_ws_make_rules(file_name)
+    github.review.warn('Consider adding REQUIRED_PACKAGES to ' + file_name) if check_required_packages(file_name)
 end
 
-def check_component_ips_manifest(file_name)
-end
+github.review.start
 
 # Component-related checks
 if has_component_changes
@@ -72,12 +71,12 @@ if has_component_changes
 
         if is_component_makefile
             check_component_makefile(file_name)
-            warn('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + file_name + ' as it was modified')
+            github.review.warn('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + file_name + ' as it was modified')
         end
 
         if is_component_ips_manifest
             component_makefile = File.join(File.dirname(file_name), 'Makefile')
-            warn('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + component_makefile + ' as IPS manifest ' + file_name + ' was modified')
+            github.review.warn('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + component_makefile + ' as IPS manifest ' + file_name + ' was modified')
         end
     end
 
@@ -89,7 +88,9 @@ if has_component_changes
         is_component_license = file_name.match(/.license$/)
 
         if is_component_patch
-            warn('Bump COMPONENT_REVISION or COMPONENT_VERSION as ' + file_name + ' was dropped')
+            github.review.warn('Bump COMPONENT_REVISION or COMPONENT_VERSION as ' + file_name + ' was dropped')
         end
     end
 end
+
+github.review.submit
