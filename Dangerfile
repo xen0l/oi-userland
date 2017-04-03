@@ -51,6 +51,7 @@ def check_component_makefile(file_name)
     github.review.warn('Consider adding REQUIRED_PACKAGES to ' + file_name) if check_required_packages(file_name)
 end
 
+
 github.review.start
 
 # Component-related checks
@@ -68,11 +69,17 @@ if has_component_changes
     end
 
     git.modified_files.each do |file_name|
+	    is_travis_cfg = file_name.match(/^\.travis\.yml$/)
         is_dangerfile = file_name.match(/Dangerfile$/)
+        is_vagrantfile = file_name.match(/Vagrantfile$/)
         is_component_makefile = file_name.match(/Makefile$/)
         is_component_ips_manifest = file_name.match(/.p5m$/)
         is_component_patch = file_name.match(/.patch$/)
         is_component_license = file_name.match(/.license$/)
+
+        if (is_travis_cfg || is_dangerfile || is_vagrantfile)
+            github.review.message('This PR touches ' + github.html_link(file_name))
+        end
 
         if is_component_makefile
             check_component_makefile(file_name)
@@ -86,11 +93,25 @@ if has_component_changes
     end
 
     git.deleted_files.each do |file_name|
+        is_travis_cfg = file_name.match(/^\.travis\.yml$/)
         is_dangerfile = file_name.match(/Dangerfile$/)
+        is_vagrantfile = file_name.match(/Vagrantfile$/)
         is_component_makefile = file_name.match(/Makefile$/)
         is_component_ips_manifest = file_name.match(/.p5m$/)
         is_component_patch = file_name.match(/.patch$/)
         is_component_license = file_name.match(/.license$/)
+
+        if is_travis_cfg
+            github.review.fail('Do not remove .travis.yml')
+        end
+
+        if is_dangerfile
+            github.review.fail('Do not remove Dangerfile')
+        end
+
+        if is_vagrantfile
+            github.review.fail('Do not remove vagrantfile')
+        end
 
         if is_component_patch
             github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION as ' + file_name + ' was dropped')
