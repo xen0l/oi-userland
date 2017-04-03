@@ -1,7 +1,7 @@
 language: ruby
 
 before_script:
-  - gem install danger --version '~> 4.0' && danger
+  - gem install danger --version '~> 4.0'
 
 script:
-  - bundle exec danger
+  - danger 
