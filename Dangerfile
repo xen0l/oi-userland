@@ -57,18 +57,18 @@ end
 # Component-related checks
 if has_component_changes
     git.added_files.each do |file_name|
-        is_component_makefile = file_name.match?(/Makefile$/)
-        is_component_ips_manifest = file_name.match?(/.p5m$/)
-        is_component_patch = file_name.match?(/.patch$/)
-        is_component_license = file_name.match?(/.license$/)
+        is_component_makefile = file_name.match(/Makefile$/)
+        is_component_ips_manifest = file_name.match(/.p5m$/)
+        is_component_patch = file_name.match(/.patch$/)
+        is_component_license = file_name.match(/.license$/)
     end
 
     git.modified_files.each do |file_name|
-        is_dangerfile = file_name.match?(/Dangerfile$/)
-        is_component_makefile = file_name.match?(/Makefile$/)
-        is_component_ips_manifest = file_name.match?(/.p5m$/)
-        is_component_patch = file_name.match?(/.patch$/)
-        is_component_license = file_name.match?(/.license$/)
+        is_dangerfile = file_name.match(/Dangerfile$/)
+        is_component_makefile = file_name.match(/Makefile$/)
+        is_component_ips_manifest = file_name.match(/.p5m$/)
+        is_component_patch = file_name.match(/.patch$/)
+        is_component_license = file_name.match(/.license$/)
 
         if is_component_makefile
             check_component_makefile(file_name)
@@ -82,11 +82,11 @@ if has_component_changes
     end
 
     git.deleted_files.each do |file_name|
-        is_dangerfile = file_name.match?(/Dangerfile$/)
-        is_component_makefile = file_name.match?(/Makefile$/)
-        is_component_ips_manifest = file_name.match?(/.p5m$/)
-        is_component_patch = file_name.match?(/.patch$/)
-        is_component_license = file_name.match?(/.license$/)
+        is_dangerfile = file_name.match(/Dangerfile$/)
+        is_component_makefile = file_name.match(/Makefile$/)
+        is_component_ips_manifest = file_name.match(/.p5m$/)
+        is_component_patch = file_name.match(/.patch$/)
+        is_component_license = file_name.match(/.license$/)
 
         if is_component_patch
             warn('Bump COMPONENT_REVISION or COMPONENT_VERSION as ' + file_name + ' was dropped')
