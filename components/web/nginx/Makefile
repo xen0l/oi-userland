@@ -69,8 +69,6 @@ build:		$(BUILD_32_and_64)
 
 install:	$(INSTALL_32_and_64)
 
-include $(WS_MAKE_RULES)/depend.mk
-
 REQUIRED_PACKAGES += database/geoip
 REQUIRED_PACKAGES += library/libxml2
 REQUIRED_PACKAGES += library/libxslt
