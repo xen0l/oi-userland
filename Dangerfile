@@ -42,7 +42,6 @@ def check_base_file(file_name)
 end
 
 def check_component_makefile(file_name)
-
     check_base_file(file_name)
 
     github.review.fail('Remove depend.mk line from ' + file_name) if check_depend_mk(file_name)
@@ -78,7 +77,7 @@ if has_component_changes
         is_component_license = file_name.match(/.license$/)
 
         if (is_travis_cfg || is_dangerfile || is_vagrantfile)
-            github.review.message('This PR touches ' + github.html_link(file_name))
+            github.review.message('This PR touches ' + github.html_link(file_name), sticky: false)
         end
 
         if is_component_makefile
@@ -101,16 +100,8 @@ if has_component_changes
         is_component_patch = file_name.match(/.patch$/)
         is_component_license = file_name.match(/.license$/)
 
-        if is_travis_cfg
-            github.review.fail('Do not remove .travis.yml')
-        end
-
-        if is_dangerfile
-            github.review.fail('Do not remove Dangerfile')
-        end
-
-        if is_vagrantfile
-            github.review.fail('Do not remove vagrantfile')
+        if (is_travis_cfg || is_dangerfile || is_vagrantfile)
+            github.review.fail('Do not remove ' + File.basename(file_name), sticky: false)
         end
 
         if is_component_patch
