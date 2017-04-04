@@ -42,7 +42,7 @@ def convert_to_link(file_name)
 end
 
 def check_base_file(file_name)
-    github.review.warn('Please add your copyright to ' + convert_to_link(file_name) if check_copyright(file_name)
+    github.review.warn('Please add your copyright to ' + convert_to_link(file_name) if check_copyright(file_name))
 end
 
 def check_component_makefile(file_name)
