@@ -9,7 +9,7 @@
 #
 
 #
-# Copyright 2012-2013, EveryCity Ltd. All rights reserved.
+# Copyright 2017 <contributor>
 #
 
 include ../../../make-rules/shared-macros.mk
