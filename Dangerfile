@@ -37,21 +37,17 @@ def check_copyright(file_name)
 end
 
 # Helper functions
-def convert_to_link(file_name)
-    return github.html_link(file_name)
-end
-
 def check_base_file(file_name)
-    github.review.warn('Please add your copyright to ' + convert_to_link(file_name) if check_copyright(file_name))
+    github.review.warn('Please add your copyright to ' + github.html_link(file_name) if check_copyright(file_name))
 end
 
 def check_component_makefile(file_name)
     check_base_file(file_name)
 
-    github.review.fail('Remove depend.mk line from ' + convert_to_link(file_name)) if check_depend_mk(file_name)
-    github.review.fail('Remove BUILD_PKG_DEPENDENCIES line from ' + convert_to_link(file_name)) if check_BUILD_PKG_DEPENDENCIES(file_name)
-    github.review.fail('Switch Makefile includes to use $(WS_MAKE_RULES) variable in ' + convert_to_link(file_name)) if check_ws_make_rules(file_name)
-    github.review.warn('Consider adding REQUIRED_PACKAGES to ' + convert_to_link(file_name)) if check_required_packages(file_name)
+    github.review.fail('Remove depend.mk line from ' + github.html_link(file_name)) if check_depend_mk(file_name)
+    github.review.fail('Remove BUILD_PKG_DEPENDENCIES line from ' + github.html_link(file_name)) if check_BUILD_PKG_DEPENDENCIES(file_name)
+    github.review.fail('Switch Makefile includes to use $(WS_MAKE_RULES) variable in ' + github.html_link(file_name)) if check_ws_make_rules(file_name)
+    github.review.warn('Consider adding REQUIRED_PACKAGES to ' + github.html_link(file_name)) if check_required_packages(file_name)
 end
 
 
@@ -66,7 +62,7 @@ if has_component_changes
         is_component_patch = file_name.match(/.patch$/)
         is_component_license = file_name.match(/.license$/)
 
-        file_html_link = convert_to_link(file_name)
+        file_html_link = github.html_link(file_name)
 
         if is_component_patch
             component_makefile = File.join(File.dirname(file_name), 'Makefile')
@@ -83,7 +79,7 @@ if has_component_changes
         is_component_patch = file_name.match(/.patch$/)
         is_component_license = file_name.match(/.license$/)
 
-        file_html_link = convert_to_link(file_name)
+        file_html_link = github.html_link(file_name)
 
         if (is_travis_cfg || is_dangerfile || is_vagrantfile)
             github.review.message('This PR touches ' + file_html_link, sticky: false)
@@ -109,7 +105,7 @@ if has_component_changes
         is_component_patch = file_name.match(/.patch$/)
         is_component_license = file_name.match(/.license$/)
 
-        file_html_link = convert_to_link(file_name)
+        file_html_link = github.html_link(file_name)
 
         if (is_travis_cfg || is_dangerfile || is_vagrantfile)
             github.review.fail('Do not remove ' + File.basename(file_name), sticky: false)
