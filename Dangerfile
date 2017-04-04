@@ -38,7 +38,7 @@ end
 
 # Helper functions
 def check_base_file(file_name)
-    github.review.warn('Please add your copyright to ' + github.html_link(file_name) if check_copyright(file_name))
+    github.review.warn('Please add your copyright to ' + github.html_link(file_name)) if check_copyright(file_name)
 end
 
 def check_component_makefile(file_name)
