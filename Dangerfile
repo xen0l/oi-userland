@@ -62,8 +62,11 @@ if has_component_changes
         is_component_patch = file_name.match(/.patch$/)
         is_component_license = file_name.match(/.license$/)
 
+        file_html_link = github.html_link(file_name)
+
         if is_component_patch
-            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + component_makefile + ' as new patch ' + file_name + ' was added')
+            component_makefile = File.join(File.dirname(file_name), 'Makefile')
+            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + github.html_link(component_makefile) + ' as new patch ' + file_html_link + ' was added')
         end
     end
 
@@ -76,18 +79,20 @@ if has_component_changes
         is_component_patch = file_name.match(/.patch$/)
         is_component_license = file_name.match(/.license$/)
 
+        file_html_link = github.html_link(file_name)
+
         if (is_travis_cfg || is_dangerfile || is_vagrantfile)
-            github.review.message('This PR touches ' + github.html_link(file_name), sticky: false)
+            github.review.message('This PR touches ' + file_html_link, sticky: false)
         end
 
         if is_component_makefile
             check_component_makefile(file_name)
-            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + file_name + ' as it was modified')
+            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + file_html_link + ' as it was modified')
         end
 
         if is_component_ips_manifest
             component_makefile = File.join(File.dirname(file_name), 'Makefile')
-            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + component_makefile + ' as IPS manifest ' + file_name + ' was modified')
+            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + github.html_linl(component_makefile) + ' as IPS manifest ' + file_html_link + ' was modified')
         end
     end
 
@@ -100,12 +105,14 @@ if has_component_changes
         is_component_patch = file_name.match(/.patch$/)
         is_component_license = file_name.match(/.license$/)
 
+        file_html_link = github.html_link(file_name)
+
         if (is_travis_cfg || is_dangerfile || is_vagrantfile)
             github.review.fail('Do not remove ' + File.basename(file_name), sticky: false)
         end
 
         if is_component_patch
-            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION as ' + file_name + ' was dropped')
+            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION as ' + file_html_link + ' was dropped')
         end
     end
 end
