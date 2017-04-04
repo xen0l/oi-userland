@@ -50,7 +50,7 @@ def check_component_makefile(file_name)
 
     github.review.fail('Remove depend.mk line from ' + convert_to_link(file_name)) if check_depend_mk(file_name)
     github.review.fail('Remove BUILD_PKG_DEPENDENCIES line from ' + convert_to_link(file_name)) if check_BUILD_PKG_DEPENDENCIES(file_name)
-    github.review.fail('Switch Makefile include to use $(WS_MAKE_RULES) variable in ' + convert_to_link(file_name)) if check_ws_make_rules(file_name)
+    github.review.fail('Switch Makefile includes to use $(WS_MAKE_RULES) variable in ' + convert_to_link(file_name)) if check_ws_make_rules(file_name)
     github.review.warn('Consider adding REQUIRED_PACKAGES to ' + convert_to_link(file_name)) if check_required_packages(file_name)
 end
 
