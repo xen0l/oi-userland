@@ -16,6 +16,7 @@ include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		bash-completion
 COMPONENT_VERSION=	2.3
+COMPONENT_REVISION=	1
 COMPONENT_FMRI=		utility/$(COMPONENT_NAME)
 COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_PROJECT_URL=	https://github.com/scop/bash-completion
