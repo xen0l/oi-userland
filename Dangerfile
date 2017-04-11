@@ -1,3 +1,6 @@
+# Shall we post as Github Reviews?
+DEBUG = (defined? ENV['DEBUG']) ? true : false
+
 # Make it more obvious that a PR is a work in progress and shouldn't be merged yet
 if github.pr_title.include? "WIP"
     warn("PR is classed as Work in Progress")
@@ -14,6 +17,28 @@ has_doc_changes = !git.modified_files.grep(/doc\//).empty?
 has_transform_changes = !git.modified_files.grep(/transforms\//).empty?
 has_tools_changes = !git.modified_files.grep(/tools\//).empty?
 has_component_changes = !git.modified_files.grep(/components\//).empty?
+
+# Wrappers
+def post_warn(msg)
+    github.review.warn(msg)
+    if DEBUG
+        warn msg
+    end
+end
+
+def post_fail(msg)
+    github.review.fail(msg)
+    if DEBUG
+       fail msg
+    end
+end
+
+def post_message(msg)
+    github.review.message(msg, sticky: false)
+    if DEBUG
+        message msg
+    end
+end
 
 # Checker functions
 def check_depend_mk(file_name)
@@ -41,7 +66,7 @@ def check_component_version_bump(file_name)
 end
 
 def check_component_revision_bump(file_name)
-    return File.open(file_name).read.match(/COMPONENT_REVISION=\$\(shell/) && git.diff_for_file(file_name).patch.match(/^\+COMPONENT_REVISION/)
+    return (!File.open(file_name).read.match(/^COMPONENT_REVISION=\$\(shell/) && git.diff_for_file(file_name).patch.match(/^\+COMPONENT_REVISION/))
 end
 
 
@@ -54,15 +79,15 @@ end
 def check_component_makefile(file_name)
     check_base_file(file_name)
 
-    github.review.fail('Remove depend.mk line from ' + github.html_link(file_name)) if check_depend_mk(file_name)
-    github.review.fail('Remove BUILD_PKG_DEPENDENCIES line from ' + github.html_link(file_name)) if check_BUILD_PKG_DEPENDENCIES(file_name)
-    github.review.fail('Switch Makefile includes to use $(WS_MAKE_RULES) variable in ' + github.html_link(file_name)) if check_ws_make_rules(file_name)
-    github.review.warn('Consider adding REQUIRED_PACKAGES to ' + github.html_link(file_name)) if check_required_packages(file_name)
+    post_fail('Remove depend.mk line from ' + github.html_link(file_name)) if check_depend_mk(file_name)
+    post_fail('Remove BUILD_PKG_DEPENDENCIES line from ' + github.html_link(file_name)) if check_BUILD_PKG_DEPENDENCIES(file_name)
+    post_fail('Switch Makefile includes to use $(WS_MAKE_RULES) variable in ' + github.html_link(file_name)) if check_ws_make_rules(file_name)
+    post_warn('Consider adding REQUIRED_PACKAGES to ' + github.html_link(file_name)) if check_required_packages(file_name)
 
-    if !check_component_version_bump(file_name) && !check_component_revision_bump(file_name)
+    if !(check_component_version_bump(file_name) || check_component_revision_bump(file_name))
+        post_fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + file_name)
     end
 end
-
 
 github.review.start
 
@@ -79,7 +104,7 @@ if has_component_changes
 
         if is_component_patch
             component_makefile = File.join(File.dirname(file_name), 'Makefile')
-            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + component_makefile + ' as new patch ' + file_html_link + ' was added')
+            post_fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + component_makefile + ' as new patch ' + file_html_link + ' was added')
         end
     end
 
@@ -95,17 +120,19 @@ if has_component_changes
         file_html_link = github.html_link(file_name)
 
         if (is_travis_cfg || is_dangerfile || is_vagrantfile)
-            github.review.message('This PR touches ' + file_html_link, sticky: false)
+            post_message('This PR touches ' + file_html_link)
         end
 
         if is_component_makefile
             check_component_makefile(file_name)
-            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + file_html_link + ' as it was modified')
+            post_fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + file_html_link + ' as it was modified')
         end
 
         if is_component_ips_manifest
             component_makefile = File.join(File.dirname(file_name), 'Makefile')
-            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + component_makefile + ' as IPS manifest ' + file_html_link + ' was modified')
+            if !(check_component_version_bump(file_name) || check_component_revision_bump(file_name))
+                post_fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + component_makefile + ' as IPS manifest ' + file_html_link + ' was modified')
+            end
         end
     end
 
@@ -121,13 +148,13 @@ if has_component_changes
         file_html_link = github.html_link(file_name)
 
         if (is_travis_cfg || is_dangerfile || is_vagrantfile)
-            github.review.fail('Do not remove ' + File.basename(file_name), sticky: false)
+            post_fail('Do not remove ' + File.basename(file_name), sticky: false)
         end
 
         if is_component_patch
-            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION as ' + file_html_link + ' was dropped')
+            post_fail('Bump COMPONENT_REVISION or COMPONENT_VERSION as ' + file_html_link + ' was dropped')
         end
     end
 end
 
-github.review.submit
+#github.review.submit
