@@ -36,6 +36,16 @@ def check_copyright(file_name)
     return !`grep '^# Copyright 2017 <contributor>' #{file_name}`.empty?
 end
 
+def check_component_version_bump(file_name)
+    return git.diff_for_file(file_name).patch.match(/^\+COMPONENT_VERSION/)
+end
+
+def check_component_revision_bump(file_name)
+    return File.open(file_name).read.match(/COMPONENT_REVISION=\$\(shell/) && git.diff_for_file(file_name).patch.match(/^\+COMPONENT_REVISION/)
+end
+
+
+
 # Helper functions
 def check_base_file(file_name)
     github.review.warn('Please add your copyright to ' + github.html_link(file_name)) if check_copyright(file_name)
@@ -48,6 +58,9 @@ def check_component_makefile(file_name)
     github.review.fail('Remove BUILD_PKG_DEPENDENCIES line from ' + github.html_link(file_name)) if check_BUILD_PKG_DEPENDENCIES(file_name)
     github.review.fail('Switch Makefile includes to use $(WS_MAKE_RULES) variable in ' + github.html_link(file_name)) if check_ws_make_rules(file_name)
     github.review.warn('Consider adding REQUIRED_PACKAGES to ' + github.html_link(file_name)) if check_required_packages(file_name)
+
+    if !check_component_version_bump(file_name) && !check_component_revision_bump(file_name)
+    end
 end
 
 
@@ -66,7 +79,7 @@ if has_component_changes
 
         if is_component_patch
             component_makefile = File.join(File.dirname(file_name), 'Makefile')
-            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + convert_to_link(component_makefile) + ' as new patch ' + file_html_link + ' was added')
+            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + component_makefile + ' as new patch ' + file_html_link + ' was added')
         end
     end
 
@@ -92,7 +105,7 @@ if has_component_changes
 
         if is_component_ips_manifest
             component_makefile = File.join(File.dirname(file_name), 'Makefile')
-            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + convert_to_link(component_makefile) + ' as IPS manifest ' + file_html_link + ' was modified')
+            github.review.fail('Bump COMPONENT_REVISION or COMPONENT_VERSION in ' + component_makefile + ' as IPS manifest ' + file_html_link + ' was modified')
         end
     end
 
