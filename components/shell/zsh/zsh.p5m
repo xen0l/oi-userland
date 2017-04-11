@@ -1158,10 +1158,6 @@ file path=usr/share/zsh/$(COMPONENT_VERSION)/help/unset
 file path=usr/share/zsh/$(COMPONENT_VERSION)/help/unsetopt
 file path=usr/share/zsh/$(COMPONENT_VERSION)/help/vared
 file path=usr/share/zsh/$(COMPONENT_VERSION)/help/wait
-file path=usr/share/zsh/$(COMPONENT_VERSION)/help/whence
-link path=usr/share/zsh/$(COMPONENT_VERSION)/help/where target=whence
-link path=usr/share/zsh/$(COMPONENT_VERSION)/help/which target=whence
-file path=usr/share/zsh/$(COMPONENT_VERSION)/help/zcompile
 file path=usr/share/zsh/$(COMPONENT_VERSION)/help/zformat
 file path=usr/share/zsh/$(COMPONENT_VERSION)/help/zftp
 file path=usr/share/zsh/$(COMPONENT_VERSION)/help/zle
