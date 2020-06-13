@@ -157,3 +157,4 @@ Building the Bits
 
     The gate should only incrementally build what it needs to based on what has
     changed since you last built it.
+
