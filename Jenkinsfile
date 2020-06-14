@@ -8,7 +8,7 @@ pipeline {
          }
          post {
             always {
-               githubPRComment comment: githubPRMessage('Build ${BUILD_NUMBER} ${BUILD_STATUS}')         
+               setGitHubPullRequestStatus()        
             }
          }
       }
