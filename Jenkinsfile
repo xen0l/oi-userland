@@ -10,7 +10,7 @@ pipeline {
             success {
                setGitHubPullRequestStatus state: "SUCCESS"
             }
-            fail {
+            failure {
                setGitHubPullRequestStatus state: "FAILURE"        
             }
          }
