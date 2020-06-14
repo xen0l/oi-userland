@@ -1,21 +1,21 @@
-properties([pipelineTriggers([githubPush()])])
-
 pipeline {
-   agent any
+  agent any
+  options {
+    timeout(time: 1, unit: 'HOURS')
+  }
 
-   stages {
-      stage('Hello') {
-         steps {
-            echo 'Hello World'
-         }
-         post {
-            success {
-               setGitHubPullRequestStatus state: "SUCCESS"
-            }
-            failure {
-               setGitHubPullRequestStatus state: "FAILURE"        
-            }
-         }
+  stages {
+    stage("Check out") {
+      steps {
+        cleanWs()
+        checkout scm
       }
-   }
+    }
+
+    stage('Prepare build zone') {
+      steps {
+        sh './tool/userland-zone spawn-zone --id' + env.CHANGE_ID
+      }
+    }
+  }
 }
