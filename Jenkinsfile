@@ -7,8 +7,11 @@ pipeline {
             echo 'Hello World'
          }
          post {
-            always {
-               setGitHubPullRequestStatus()        
+            success {
+               setGitHubPullRequestStatus state: "SUCCESS"
+            }
+            fail {
+               setGitHubPullRequestStatus state: "FAILURE"        
             }
          }
       }
